@@ -14,10 +14,7 @@
  * limitations under the License.
  */
 
-import {
-  errorHandler,
-  PluginEndpointDiscovery,
-} from '@backstage/backend-common';
+import { errorHandler, SingleHostDiscovery } from '@backstage/backend-common';
 import { getEntityName } from '@backstage/catalog-model';
 import type { Entity } from '@backstage/catalog-model';
 import {
@@ -58,7 +55,6 @@ export interface RouterOptions {
   refreshService?: RefreshService;
   logger: Logger;
   config: Config;
-  discovery: PluginEndpointDiscovery;
 }
 
 export async function createRouter(
@@ -78,8 +74,9 @@ export async function createRouter(
   const router = Router();
   router.use(express.json());
 
+  const discoveryApi = SingleHostDiscovery.fromConfig(config);
   const permissionApi = new PermissionClient({
-    discoveryApi: options.discovery,
+    discoveryApi,
   });
 
   const readonlyEnabled =
