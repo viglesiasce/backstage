@@ -27,6 +27,7 @@ import {
 } from '@backstage/catalog-model';
 import { Config } from '@backstage/config';
 import { ScmIntegrations } from '@backstage/integration';
+import { PermissionClient } from '@backstage/permission-common';
 import lodash from 'lodash';
 import { Logger } from 'winston';
 import {
@@ -72,6 +73,7 @@ export type CatalogEnvironment = {
   database: PluginDatabaseManager;
   config: Config;
   reader: UrlReader;
+  permissions: PermissionClient;
 };
 
 /**
