@@ -21,7 +21,7 @@
  */
 exports.up = async function up(knex) {
   //
-  // locking
+  // locks
   //
   await knex.schema.createTable(
     'backstage_backend_common__task_locks',
@@ -44,7 +44,7 @@ exports.up = async function up(knex) {
         .dateTime('expires_at')
         .nullable()
         .comment('The time when an acquired lock will time out and expire');
-      table.index('id', 'task_locks_id_idx');
+      table.index('id', 'backstage_backend_common__task_locks__id_idx');
     },
   );
   //
@@ -64,8 +64,18 @@ exports.up = async function up(knex) {
  * @param {import('knex').Knex} knex
  */
 exports.down = async function down(knex) {
-  await knex.schema.alterTable('task_locks', table => {
-    table.dropIndex([], 'task_locks_id_idx');
-  });
-  await knex.schema.dropTable('task_locks');
+  //
+  // tasks
+  //
+  await knex.schema.dropTable('backstage_backend_common__tasks');
+  //
+  // locks
+  //
+  await knex.schema.alterTable(
+    'backstage_backend_common__task_locks',
+    table => {
+      table.dropIndex([], 'backstage_backend_common__task_locks__id_idx');
+    },
+  );
+  await knex.schema.dropTable('backstage_backend_common__task_locks');
 };
